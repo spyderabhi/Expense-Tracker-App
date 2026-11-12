@@ -1,0 +1,13 @@
+name: Source syntax validation
+on: [push, pull_request]
+jobs:
+  node-syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Parse Express backend source files
+        run: |
+          find backend -name '*.js' -not -path '*/node_modules/*' -print0 | xargs -0 -n1 node --check
