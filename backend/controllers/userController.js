@@ -38,7 +38,7 @@ export const registerControllers = async (req, res, next) => {
         return res.status(200).json({
             success: true,
             message: "User Created Successfully",
-            user: newUser
+            user: (() => { const safeUser = newUser.toObject(); delete safeUser.password; return safeUser; })()
         });
     }
     catch(err){
@@ -80,12 +80,13 @@ export const loginControllers = async (req, res, next) => {
             }); 
         }
 
-        delete user.password;
+        const safeUser = user.toObject();
+        delete safeUser.password;
 
         return res.status(200).json({
             success: true,
             message: `Welcome back, ${user.name}`,
-            user,
+            user: safeUser,
         });
 
     }
